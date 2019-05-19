@@ -5,12 +5,12 @@ a directory of your choice.
 
 <https://gstreamer.freedesktop.org/data/pkg/android/>
 
-Edit gradle.properties in order to set gstAndroidRoot to point to the
+Edit local.properties in order to set gstAndroidRoot to point to the
 unpacked GStreamer Android binaries.
 
 ## Build and deploy on the command line
 
-To build and deploy the rtsp example to your device, use a command similar to:
+To build and deploy the rtsp player to your device, use a command similar to:
 
 ```bash
 $ PATH=~/dev/android/tools/bin:~/dev/android/ndk-bundle:$PATH ANDROID_HOME="$HOME/dev/android/" ./gradlew installDebug
@@ -19,7 +19,7 @@ $ PATH=~/dev/android/tools/bin:~/dev/android/ndk-bundle:$PATH ANDROID_HOME="$HOM
 ## Run the application on the device
 
 ```bash
-$ adb shell am start -n org.freedesktop.gstreamer.rtsp_example/.RTSPExample
+$ adb shell am start -n org.freedesktop.gstreamer.rtsp_player/.RTSPPlayer
 ```
 
 To see the GStreamer logs at runtime:

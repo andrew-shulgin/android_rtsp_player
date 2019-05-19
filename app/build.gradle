@@ -1,35 +1,35 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 23
+    compileSdkVersion 28
     buildToolsVersion '27.0.3'
+    Properties properties = new Properties()
+    properties.load(project.rootProject.file("local.properties").newDataInputStream())
 
     defaultConfig {
-        applicationId "org.freedesktop.gstreamer.rtsp_example"
+        applicationId "org.freedesktop.gstreamer.rtsp_player"
         minSdkVersion 15
-        targetSdkVersion 15
+        targetSdkVersion 28
         versionCode 1
         versionName "1.0"
 
 
         externalNativeBuild {
             ndkBuild {
-                def gstRoot
-
-                if (project.hasProperty('gstAndroidRoot'))
+                def gstRoot = properties.getProperty('gstAndroidRoot', null)
+                if (gstRoot == null && project.hasProperty('gstAndroidRoot'))
                     gstRoot = project.gstAndroidRoot
-                else
-                    gstRoot = System.env.GSTREAMER_ROOT_ANDROID
-
                 if (gstRoot == null)
-                    throw new GradleException('GSTREAMER_ROOT_ANDROID must be set, or "gstAndroidRoot" must be defined in your gradle.properties in the top level directory of the unpacked universal GStreamer Android binaries')
+                    gstRoot = System.env.GSTREAMER_ROOT_ANDROID
+                if (gstRoot == null)
+                    throw new GradleException('GSTREAMER_ROOT_ANDROID must be set, or "gstAndroidRoot" must be defined in your local.properties in the top level directory of the unpacked universal GStreamer Android binaries')
 
                 arguments "NDK_APPLICATION_MK=jni/Application.mk", "GSTREAMER_JAVA_SRC_DIR=src", "GSTREAMER_ROOT_ANDROID=$gstRoot", "GSTREAMER_ASSETS_DIR=src/assets"
 
-                targets "rtsp-example"
+                targets "rtsp-player"
 
                 // All archs except MIPS and MIPS64 are supported
-                abiFilters  'armeabi-v7a', 'arm64-v8a', 'x86'
+                abiFilters 'armeabi-v7a', 'x86'
                 // x86_64 abis disabled because of https://bugzilla.gnome.org/show_bug.cgi?id=795454
             }
         }
@@ -39,10 +39,10 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-	    sourceSets {
+            sourceSets {
                 main {
                     manifest.srcFile 'AndroidManifest.xml'
-		    java.srcDirs = ['src']
+                    java.srcDirs = ['src']
                     resources.srcDirs = ['src']
                     aidl.srcDirs = ['src']
                     renderscript.srcDirs = ['src']
@@ -67,5 +67,5 @@ afterEvaluate {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     testImplementation 'junit:junit:4.12'
-    implementation 'com.android.support:appcompat-v7:23.1.1'
+    implementation 'com.android.support:appcompat-v7:28.0.0'
 }
